@@ -12,13 +12,19 @@ import React, { Component } from 'react';
 import './App.css';
 import ReactApexChart from "react-apexcharts";
 
+/*
+    Viivakaavion luominen propsien avulla.
+    Käytetään ApexChartseja.
+*/
+
 var LineChart = function (_Component) {
     _inherits(LineChart, _Component);
 
     function LineChart(props) {
         _classCallCheck(this, LineChart);
 
-        var _this = _possibleConstructorReturn(this, (LineChart.__proto__ || Object.getPrototypeOf(LineChart)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (LineChart.__proto__ || Object.getPrototypeOf(LineChart)).call(this, props)); //kaavion asetukset
+
 
         _this.state = {
             options: {
@@ -40,12 +46,12 @@ var LineChart = function (_Component) {
                     align: 'left'
                 },
                 xaxis: {
-                    categories: []
+                    categories: [] //x-akselin data taulukkona
                 }
             },
             series: [{
                 name: "Tartunnat",
-                data: []
+                data: [] //y-akselin data taulukkona
             }]
         };
         return _this;
@@ -68,6 +74,7 @@ var LineChart = function (_Component) {
             var _this2 = this;
 
             if (this.props.dates !== prevProps.dates) {
+                //Koska data ei tule ensimmäiselle renderille, täytyy se asettaa propseista componentDidUpdatella.
                 this.setState({
                     options: Object.assign({}, prevState.options, {
                         xaxis: {
@@ -80,23 +87,28 @@ var LineChart = function (_Component) {
                 });
             }
             if (this.props.startDate !== prevProps.startDate || this.props.endDate !== prevProps.endDate) {
+                //datan päivittäminen kun ajankohtia muutellaan valikoista.
                 var i = void 0,
                     j = void 0,
                     y = void 0;
                 var newDates = [].concat(_toConsumableArray(this.props.dates));
-                var newInfections = JSON.parse(JSON.stringify(this.props.infections));
+                var newInfections = JSON.parse(JSON.stringify(this.props.infections)); //luodaan kopiot propseista
+
 
                 for (i = 0; i < newDates.length; i++) {
                     if (this.props.startDate.setHours(0, 0, 0, 0) === new Date(newDates[i]).setHours(0, 0, 0, 0)) {
+                        //haetaan startDatea vastaava indkesi taulukosta
                         break;
                     }
                 }
                 for (y = newDates.length - 1; y >= 0; y--) {
                     if (this.props.endDate.setHours(0, 0, 0, 0) === new Date(newDates[y]).setHours(0, 0, 0, 0)) {
+                        //haetaan endDatea vastaava indeksi taulukosta
                         break;
                     }
                 }
                 for (var z = 0; z < i; z++) {
+                    //poistetaan päivämäärätaulukosta alku- ja loppupään ylimääräiset päivät jotka jäävät ulkopuolelle
                     newDates.shift();
                 }
                 j = y - i;
@@ -106,6 +118,7 @@ var LineChart = function (_Component) {
                 i += 27;
                 y += 27;
                 for (var _z2 = 27; _z2 < i; _z2++) {
+                    //sama tartuntamääriin
                     delete newInfections[_z2.toString()];
                 }
 
@@ -114,7 +127,7 @@ var LineChart = function (_Component) {
                     console.log("hejooo");
                     delete newInfections[_z3.toString()];
                 }
-                this.setState({
+                this.setState({ //asetetaan uudet taulukot kaavion käyttöön
                     options: Object.assign({}, prevState.options, {
                         xaxis: {
                             categories: newDates

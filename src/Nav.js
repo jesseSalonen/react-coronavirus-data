@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 import { Link } from 'react-router-dom';
 
+/*
+    Luodaan yläpaneelin navigointivalikko, ja Routerin avulla ohjataan ne oikeisiin endpointeihin.
+*/
 class Nav extends Component {
 
     constructor(props) {
@@ -19,10 +22,10 @@ class Nav extends Component {
                     <Link style={{'color': this.state.fontColor}} to='/'>
                     <li>Etusivu</li>
                     </Link>
-                    <Link style={{'color': this.state.fontColor}} to='/data'>
+                    <Link style={{'color': this.state.fontColor}} to='/päädata'>
                     <li>Päädata</li>
                     </Link>
-                    <Link style={{'color': this.state.fontColor}} to='/interesting'>
+                    <Link style={{'color': this.state.fontColor}} to='/mielenkiintoinen'>
                     <li>Mielenkiintoinen data</li>
                     </Link>
                 </ul>

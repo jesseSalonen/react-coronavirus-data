@@ -15,6 +15,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 var source = void 0;
+/*
+    Viivakaavion datan hakua varten toteutettu komponentti.
+    Mounttauksen jälkeen hakee datan THL:n avoimen datan API:sta,
+    ja muuntaa sen kaaviota varten sopivaksi.
+    Luo myös päivämäärävalikot alku- ja loppupäivämäärille.
+    Data jaetaan lapsikomponentille "lineChart.js" propseina.
+    Päivämäärävalikot saavat tietonsa myös stateista.
+*/
 
 var Data = function (_Component) {
     _inherits(Data, _Component);
@@ -25,7 +33,7 @@ var Data = function (_Component) {
         var _this = _possibleConstructorReturn(this, (Data.__proto__ || Object.getPrototypeOf(Data)).call(this, props));
 
         _this.daysFromStart = function () {
-            var date1 = new Date("Jan 2, 2020, 12:00:00");
+            var date1 = new Date("Jan 2, 2020, 12:00:00"); //tämä täytyy tehdä, koska THL:n arvojen alkamisajankohdat ovat hieman sattumanvaraiset
             var date2 = new Date();
 
             var total_seconds = Math.abs(date2 - date1) / 1000;
@@ -36,10 +44,10 @@ var Data = function (_Component) {
         };
 
         _this.state = {
-            infections: [],
+            infections: [], //data tulee kahteen taulukkoon, x-akselille päivämäärät, y-akselille tartunnat
             dates: [],
             startDate: new Date(2020, 0, 28),
-            endDate: new Date(new Date().setDate(new Date().getDate() - 1))
+            endDate: new Date(new Date().setDate(new Date().getDate() - 1)) //Koska THL tuo datansa pienellä viiveellä, on loppupäivä hieman nykypäivää jäljessä
         };
         source = axios.CancelToken.source();
         return _this;
@@ -95,20 +103,21 @@ var Data = function (_Component) {
         value: function componentDidMount() {
             var _this3 = this;
 
-            var index = [];
+            var index = []; //sijoitetaan "raaka" data muuttujiin, joita muokataan diagrammiin sopivaksi.
             var label = [];
             var values = [];
             var temp = [];
-            var elapsed_days = this.daysFromStart();
-            axios.get('/fact_epirapo_covid19case.json?column=dateweek2020010120201231-443702L', {
+            var elapsed_days = this.daysFromStart(); //haetaan kuluneiden päivämäärien arvo, jotta datasta saadaan oikea loppupäivämäärä kaaviolle.
+            axios.get('/fact_epirapo_covid19case.json?column=dateweek2020010120201231-443702L', { //haetaan data axiosin avulla, ja käsitellään virheelliset haut componentDidUnmount-metodissa.
                 cancelToken: source.token
             }).then(function (res) {
                 index = res.data.dataset.dimension.dateweek2020010120201231.category.index;
                 label = res.data.dataset.dimension.dateweek2020010120201231.category.label;
                 values = res.data.dataset.value;
-                delete values[(Object.keys(values).length + 26).toString()];
+                delete values[(Object.keys(values).length + 26).toString()]; //Koska THL tuo datansa pienellä viiveellä, poistetaan viimeisimmät tiedot datasta.
                 for (var j = 27; j <= elapsed_days; j++) {
                     for (var i = 443640; i <= 444640; i++) {
+                        //uudelleenjärjestetään otsikkotaulukon arvot päivämäärien perusteella.
                         if (index[i] === j) {
                             temp.push(label[i]);
                         }
@@ -118,7 +127,7 @@ var Data = function (_Component) {
                     infections: values,
                     dates: temp
                 });
-                console.log(_this3.state.infections);
+                console.log(_this3.state.infections); //data on nähtävissä konsolissa
                 console.log(_this3.state.dates);
             }).catch(function (err) {
                 console.log("Catched error: " + err.message);

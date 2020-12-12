@@ -10,13 +10,19 @@ import React, { Component } from 'react';
 import './App.css';
 import ReactApexChart from "react-apexcharts";
 
+/*
+    Pylväsdiagrammin luominen propsien avulla.
+    Käytetään ApexChartseja.
+*/
+
 var BarChart = function (_Component) {
     _inherits(BarChart, _Component);
 
     function BarChart(props) {
         _classCallCheck(this, BarChart);
 
-        var _this = _possibleConstructorReturn(this, (BarChart.__proto__ || Object.getPrototypeOf(BarChart)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (BarChart.__proto__ || Object.getPrototypeOf(BarChart)).call(this, props)); //kaavion asetukset
+
 
         _this.state = {
             options: {
@@ -24,7 +30,7 @@ var BarChart = function (_Component) {
                     id: "basic-bar"
                 },
                 xaxis: {
-                    categories: []
+                    categories: [] //x-akselin data taulukkona
                 },
                 plotOptions: {
                     bar: {
@@ -64,7 +70,7 @@ var BarChart = function (_Component) {
             },
             series: [{
                 name: "Tartunnat",
-                data: []
+                data: [] //y-akselin data taulukkona
             }]
         };
         return _this;
@@ -86,6 +92,7 @@ var BarChart = function (_Component) {
         value: function componentDidUpdate(prevProps, prevState) {
             var _this2 = this;
 
+            //Koska data ei tule ensimmäiselle renderille, täytyy se asettaa propseista componentDidUpdatella.
             if (this.props.ageGroups !== prevProps.ageGroups) {
                 this.setState({
                     options: Object.assign({}, prevState.options, {

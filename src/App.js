@@ -13,8 +13,8 @@ function App() {
       <Nav />
       <Switch>
         <Route path="/" exact component={About}/>
-        <Route path="/data" component={Data}/>
-        <Route path="/interesting" component={Interesting}/>
+        <Route path="/päädata" component={Data}/>
+        <Route path="/mielenkiintoinen" component={Interesting}/>
       </Switch>
     </div>
     </Router>

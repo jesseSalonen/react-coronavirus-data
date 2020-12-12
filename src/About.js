@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
+/*
+  Etusivun komponentti
+*/
 class About extends Component {
 
 

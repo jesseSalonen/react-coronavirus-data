@@ -10,6 +10,10 @@ import React, { Component } from 'react';
 import './App.css';
 import { Link } from 'react-router-dom';
 
+/*
+    Luodaan yläpaneelin navigointivalikko, ja Routerin avulla ohjataan ne oikeisiin endpointeihin.
+*/
+
 var Nav = function (_Component) {
     _inherits(Nav, _Component);
 
@@ -49,7 +53,7 @@ var Nav = function (_Component) {
                     ),
                     React.createElement(
                         Link,
-                        { style: { 'color': this.state.fontColor }, to: '/data' },
+                        { style: { 'color': this.state.fontColor }, to: '/p\xE4\xE4data' },
                         React.createElement(
                             'li',
                             null,
@@ -58,7 +62,7 @@ var Nav = function (_Component) {
                     ),
                     React.createElement(
                         Link,
-                        { style: { 'color': this.state.fontColor }, to: '/interesting' },
+                        { style: { 'color': this.state.fontColor }, to: '/mielenkiintoinen' },
                         React.createElement(
                             'li',
                             null,

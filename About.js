@@ -9,6 +9,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import './App.css';
 
+/*
+  Etusivun komponentti
+*/
+
 var About = function (_Component) {
   _inherits(About, _Component);
 
