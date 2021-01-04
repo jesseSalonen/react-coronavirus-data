@@ -91,16 +91,13 @@ class LineChart extends Component {
             j = y - i;
             for (let z = 0; z < newDates.length - 1 - j; z++) {
                 newDates.pop();
-            }
-            i += 27;
-            y += 27;
-            for (let z = 27; z < i; z++) {              //sama tartuntamääriin
+            }            
+            for (let z = 0; z < i; z++) {              //sama tartuntamääriin
                 delete newInfections[z.toString()];
             }
             
             const objectSize = Object.keys(newInfections).length - 1;
             for (let z = i + objectSize; z > y; z--) {
-                console.log("hejooo");
                 delete newInfections[z.toString()];
             }
             this.setState({             //asetetaan uudet taulukot kaavion käyttöön

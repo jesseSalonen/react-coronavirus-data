@@ -115,16 +115,13 @@ var LineChart = function (_Component) {
                 for (var _z = 0; _z < newDates.length - 1 - j; _z++) {
                     newDates.pop();
                 }
-                i += 27;
-                y += 27;
-                for (var _z2 = 27; _z2 < i; _z2++) {
+                for (var _z2 = 0; _z2 < i; _z2++) {
                     //sama tartuntamääriin
                     delete newInfections[_z2.toString()];
                 }
 
                 var objectSize = Object.keys(newInfections).length - 1;
                 for (var _z3 = i + objectSize; _z3 > y; _z3--) {
-                    console.log("hejooo");
                     delete newInfections[_z3.toString()];
                 }
                 this.setState({ //asetetaan uudet taulukot kaavion käyttöön
