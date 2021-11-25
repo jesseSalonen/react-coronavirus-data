@@ -22,7 +22,7 @@ class Data extends Component {
       this.state = {
           infections: [],           //data tulee kahteen taulukkoon, x-akselille päivämäärät, y-akselille tartunnat
           dates: [],
-          startDate: new Date(2020,0,28),
+          startDate: new Date(2020,0,1),
           endDate: new Date(new Date().setDate(new Date().getDate()-1))         //Koska THL tuo datansa pienellä viiveellä, on loppupäivä hieman nykypäivää jäljessä
       };
       source = axios.CancelToken.source();
@@ -44,7 +44,7 @@ class Data extends Component {
                         selectsStart
                         startDate={this.state.startDate}
                         endDate={this.state.endDate}
-                        minDate={new Date(2020,0,28)}
+                        minDate={new Date(2020,0,1)}
                         maxDate={this.state.endDate}
                         dateFormat="yyyy/MM/dd"/>
                 </div>
@@ -68,16 +68,16 @@ class Data extends Component {
         let label = [];
         let values = [];
         let temp = [];
-        const elapsed_days = this.daysFromStart();          //haetaan kuluneiden päivämäärien arvo, jotta datasta saadaan oikea loppupäivämäärä kaaviolle.
-        axios.get('/fact_epirapo_covid19case.json?column=dateweek2020010120201231-443702L', {           //haetaan data axiosin avulla, ja käsitellään virheelliset haut componentDidUnmount-metodissa.
+        axios.get('/fact_epirapo_covid19case.json?column=dateweek20200101-509030.&column=508804L#', {           //haetaan data axiosin avulla, ja käsitellään virheelliset haut componentDidUnmount-metodissa.
             cancelToken: source.token
         }).then(res => {
-            index = res.data.dataset.dimension.dateweek2020010120201231.category.index;
-            label = res.data.dataset.dimension.dateweek2020010120201231.category.label;
+            index = res.data.dataset.dimension.dateweek202001011.category.index;
+            label = res.data.dataset.dimension.dateweek202001011.category.label;
             values = res.data.dataset.value;
-            delete values[(Object.keys(values).length + 26).toString()];            //Koska THL tuo datansa pienellä viiveellä, poistetaan viimeisimmät tiedot datasta.
-            for (let j = 27; j <= elapsed_days; j++) {
-                for (let i = 443640; i <= 444640; i++) {                //uudelleenjärjestetään otsikkotaulukon arvot päivämäärien perusteella.
+            delete values["731"];
+            delete values[(Object.keys(values).length - 1).toString()];        //Koska THL tuo datansa pienellä viiveellä, poistetaan viimeisimmät tiedot datasta.
+            for (let j = 0; j <= Object.keys(values).length - 1; j++) {
+                for (let i = 508488; i <= 509328; i++) {                //uudelleenjärjestetään otsikkotaulukon arvot päivämäärien perusteella.
                     if (index[i] === j) { 
                         temp.push(label[i]);
                     }
@@ -98,17 +98,6 @@ class Data extends Component {
         if (source) {
             source.cancel("Component got unmounted");
         }
-    }
-
-    daysFromStart = () => {
-        const date1 = new Date("Jan 2, 2020, 12:00:00");                //tämä täytyy tehdä, koska THL:n arvojen alkamisajankohdat ovat hieman sattumanvaraiset
-        const date2 = new Date();
-
-        const total_seconds = Math.abs(date2 - date1) / 1000;
-
-        const days_difference = Math.floor(total_seconds / (60 * 60 * 24));
-
-        return days_difference;
     }
 }
 
